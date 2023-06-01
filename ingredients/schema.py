@@ -38,6 +38,15 @@ class CreateCategory(relay.ClientIDMutation):
         name = String()
     
     def mutate_and_get_payload(root, info, **input):
+
+        name = input["name"]
+        if name is None:
+            raise ValidationError('Name has to be defined.')
+
+        existing_category = Category.objects.filter(name=name);
+        if existing_category is not None:
+            raise ValidationError('This category already exists.')
+
         category = Category(
             name = input["name"]
         )
