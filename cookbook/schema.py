@@ -16,10 +16,13 @@ class IngredientType(DjangoObjectType):
 class Query(graphene.ObjectType):
     all_ingredients = graphene.List(IngredientType)
     all_categories = graphene.List(CategoryType)
+    category_by_name = graphene.Field(CategoryType, name=graphene.String(required=True))
 
     def resolve_all_ingredients(root, info):
         return Ingredient.objects.select_related("category").all()
-    def resolve_all_categories(root, info, name):
+    def resolve_all_categories(root, info):
+        return Category.objects.all()
+    def resolve_category_by_name(root, info, name):
         try:
             return Category.objects.get(name=name)
         except Category.DoesNotExist:
