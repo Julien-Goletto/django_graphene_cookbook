@@ -1,6 +1,7 @@
-from graphene import relay, ObjectType
+from graphene import relay, ObjectType, String, Field
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
+from django.core.exceptions import ValidationError
 
 from ingredients.models import Category, Ingredient
 
@@ -29,3 +30,21 @@ class Query(ObjectType):
 
     ingredient = relay.Node.Field(IngredientNode)
     all_ingredients = DjangoFilterConnectionField(IngredientNode)
+
+class CreateCategory(relay.ClientIDMutation):
+    category = Field(CategoryNode)
+
+    class Input:
+        name = String()
+    
+    def mutate_and_get_payload(root, info, **input):
+        category = Category(
+            name = input["name"]
+        )
+        category.save()
+
+        return CreateCategory(category=category)
+
+
+class Mutation(ObjectType):
+    create_category = CreateCategory.Field()
