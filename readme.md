@@ -71,6 +71,36 @@ query {
 }
 ```
 
+```graphql
+mutation{
+  createCategory(input:{name: "Cereals"}){
+    category{
+      id
+      name
+    }
+  }
+}
+```
+
+```graphql
+mutation{
+  updateCategory(input:{id: null, name:"Cereals", newName: "Vegetables"}){
+    category{
+      name
+      id
+    }
+  }
+}
+```
+
+```graphql
+mutation{
+  deleteCategory(input: {name: "Vegetables", id: null}){
+    deleteConfirmation
+  }
+}
+```
+
 ## Ressources
 
 - [Graphene-django documentation](https://docs.graphene-python.org/en/latest/)
